@@ -15,7 +15,7 @@ const emojis = [
 const youtubeInput = document.getElementById('youtube-link');
 const previewBtn = document.getElementById('preview-btn');
 const videoPreview = document.getElementById('video-preview');
-const message = document.getElementById('message');
+const messageDiv = document.getElementById('message');
 const emojiGrid = document.querySelector('.emoji-grid');
 
 // Initialize emoji grid
@@ -72,12 +72,12 @@ function handleEmojiSelection(emoji, button) {
     container.classList.add('selected');
     
     // Show message
-    message.textContent = `You chose ${emoji}!`;
-    message.style.opacity = 1;
+    messageDiv.textContent = `You chose ${emoji}!`;
+    messageDiv.style.opacity = 1;
 
     // Fade out message after 2 seconds
     setTimeout(() => {
-        message.style.opacity = 0;
+        messageDiv.style.opacity = 0;
     }, 2000);
 }
 
@@ -101,9 +101,84 @@ initializeEmojiGrid();
 
 // Add click event listeners to emoji buttons
 document.querySelectorAll('.emoji-btn').forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
         const emoji = button.getAttribute('data-emoji');
         handleEmojiSelection(emoji, button);
+
+        if (!currentVideoId) {
+            messageDiv.textContent = 'Please preview a video first!';
+            messageDiv.style.opacity = 1;
+            setTimeout(() => {
+                messageDiv.style.opacity = 0;
+            }, 2000);
+            return;
+        }
+
+        const youtubeLink = youtubeInput.value;
+
+        messageDiv.textContent = 'Processing your audio... Please wait...';
+        messageDiv.style.opacity = 1;
+        button.classList.add('selected');
+
+        try {
+            const response = await fetch('http://localhost:5000/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    youtubeLink,
+                    emoji: selectedEmoji
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to process audio');
+            }
+
+            // Get the blob from the response
+            const blob = await response.blob();
+            
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create an audio element
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = url;
+            
+            // Add the audio element to the page
+            const audioContainer = document.createElement('div');
+            audioContainer.className = 'audio-preview';
+            audioContainer.innerHTML = `
+                <h3>Processed Audio 🎵</h3>
+                <a href="${url}" download="processed_audio.mp3" class="download-btn">Download</a>
+            `;
+            audioContainer.prepend(audio);
+            
+            // Remove any existing audio preview
+            const existingPreview = document.querySelector('.audio-preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+            
+            // Add the new audio preview after the video preview
+            videoPreview.after(audioContainer);
+            
+            messageDiv.textContent = 'Audio processed successfully! You can now play or download it.';
+            messageDiv.style.opacity = 1;
+            setTimeout(() => {
+                messageDiv.style.opacity = 0;
+            }, 2000);
+        } catch (error) {
+            messageDiv.textContent = 'Error processing audio: ' + error.message;
+            messageDiv.style.opacity = 1;
+            setTimeout(() => {
+                messageDiv.style.opacity = 0;
+            }, 2000);
+        } finally {
+            button.classList.remove('selected');
+        }
     });
 });
 
