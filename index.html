@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groovify - Add Your Groove</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Montserrat:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="neon-text">Groovify</h1>
+            <p class="subtitle">Add your own groove to your favorite song</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <input type="text" id="youtube-link" placeholder="Drop your YouTube link here..." class="youtube-input">
+                <button id="preview-btn" class="neon-button">Preview</button>
+            </div>
+
+            <div id="video-preview" class="video-preview">
+                <!-- Video preview will be inserted here -->
+            </div>
+
+            <div class="emoji-grid">
+                <button class="emoji-btn" data-emoji="😍">😍</button>
+                <button class="emoji-btn" data-emoji="🥳">🥳</button>
+                <button class="emoji-btn" data-emoji="😎">😎</button>
+                <button class="emoji-btn" data-emoji="😢">😢</button>
+                <button class="emoji-btn" data-emoji="😂">😂</button>
+                <button class="emoji-btn" data-emoji="🤬">🤬</button>
+                <button class="emoji-btn" data-emoji="❤️">❤️</button>
+                <button class="emoji-btn" data-emoji="🔥">🔥</button>
+                <button class="emoji-btn" data-emoji="💃">💃</button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

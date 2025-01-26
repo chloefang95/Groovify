@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groovify Title Styles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e1007a 0%, #2e008b 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .style-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .style-box {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .style-name {
+            font-size: 1rem;
+            color: #ff0080;
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Style 1: Neon Glow Effect */
+        .neon-glow {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080;
+        }
+
+        /* Style 2: Gradient Fill */
+        .gradient-fill {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, #ff0080, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Style 3: Holographic Effect */
+        .holographic {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, #ff0080, #8a2be2, #00cfe9);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: colorShift 3s infinite;
+        }
+
+        @keyframes colorShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Style 4: Cyberpunk Lines */
+        .cyberpunk-lines {
+            font-family: 'Press Start 2P', sans-serif;
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080;
+            position: relative;
+        }
+
+        .cyberpunk-lines::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* Style 5: 3D Effect */
+        .three-d {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 3px 3px 0 #ff0080, 6px 6px 0 #8a2be2;
+        }
+
+        /* Style 6: Animated Flicker */
+        .animated-flicker {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: #ff0080;
+            text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080;
+            animation: flicker 2s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080;
+            }
+            20%, 24%, 55% {
+                opacity: 0.8;
+                text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 15px #ff0080;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="style-container">
+        <div class="style-box">
+            <div class="style-name">1. Neon Glow Effect</div>
+            <div class="neon-glow">Groovify</div>
+        </div>
+
+        <div class="style-box">
+            <div class="style-name">2. Gradient Fill</div>
+            <div class="gradient-fill">Groovify</div>
+        </div>
+
+        <div class="style-box">
+            <div class="style-name">3. Holographic Effect</div>
+            <div class="holographic">Groovify</div>
+        </div>
+
+        <div class="style-box">
+            <div class="style-name">4. Cyberpunk Lines</div>
+            <div class="cyberpunk-lines">Groovify</div>
+        </div>
+
+        <div class="style-box">
+            <div class="style-name">5. 3D Effect</div>
+            <div class="three-d">Groovify</div>
+        </div>
+
+        <div class="style-box">
+            <div class="style-name">6. Animated Flicker</div>
+            <div class="animated-flicker">Groovify</div>
+        </div>
+    </div>
+</body>
+</html>
