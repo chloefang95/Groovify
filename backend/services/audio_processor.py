@@ -1,7 +1,9 @@
 from pydub import AudioSegment
-import librosa
-import numpy as np
 import os
+import logging
+import tempfile
+
+logger = logging.getLogger(__name__)
 
 def process_audio(input_path, target_bpm, output_path):
     """
@@ -16,25 +18,63 @@ def process_audio(input_path, target_bpm, output_path):
         str: Path to the processed audio file
     """
     try:
-        # Load the audio file
-        audio = AudioSegment.from_file(input_path)
+        logger.info(f"Starting audio processing. Input: {input_path}, Target BPM: {target_bpm}")
         
-        # Detect original BPM using librosa
-        y, sr = librosa.load(input_path)
-        tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
-        
-        # Calculate speed ratio
-        speed_ratio = target_bpm / tempo if tempo > 0 else target_bpm / 100.0
-        
-        # Apply time stretching while preserving pitch
-        stretched = audio._spawn(audio.raw_data, overrides={
-            "frame_rate": int(audio.frame_rate * speed_ratio)
-        }).set_frame_rate(audio.frame_rate)
-        
-        # Export the processed audio
-        stretched.export(output_path, format="mp3")
-        
-        return output_path
-        
+        # Create a temporary directory for processing
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # First convert to WAV for better processing
+            logger.info("Converting to WAV format...")
+            temp_wav = os.path.join(temp_dir, "temp.wav")
+            
+            # Load and export as WAV
+            audio = AudioSegment.from_mp3(input_path)
+            audio.export(temp_wav, format="wav")
+            
+            # Reload the WAV file
+            audio = AudioSegment.from_wav(temp_wav)
+            
+            # Calculate speed change
+            # We'll use a more conservative approach:
+            # Base is 100 BPM, max change is 50% up or down
+            base_bpm = 100.0
+            max_ratio = 1.5
+            min_ratio = 0.5
+            
+            speed_ratio = target_bpm / base_bpm
+            speed_ratio = max(min(speed_ratio, max_ratio), min_ratio)
+            
+            logger.info(f"Applying speed ratio: {speed_ratio}")
+            
+            # Create the modified audio
+            modified = audio._spawn(audio.raw_data, overrides={
+                "frame_rate": int(audio.frame_rate * speed_ratio)
+            })
+            
+            # Maintain original sample rate
+            modified = modified.set_frame_rate(audio.frame_rate)
+            
+            # Apply a slight fade in/out to prevent clicks
+            modified = modified.fade_in(100).fade_out(100)
+            
+            # Export with high quality
+            logger.info(f"Exporting to {output_path}")
+            modified.export(
+                output_path,
+                format="mp3",
+                bitrate="192k",
+                parameters=["-q:a", "0"]  # Use highest quality
+            )
+            
+            # Verify the output file
+            if not os.path.exists(output_path):
+                raise Exception("Failed to create output file")
+                
+            if os.path.getsize(output_path) == 0:
+                raise Exception("Output file is empty")
+                
+            logger.info("Audio processing completed successfully")
+            return output_path
+            
     except Exception as e:
+        logger.error(f"Error in process_audio: {str(e)}", exc_info=True)
         raise Exception(f"Error processing audio: {str(e)}")
